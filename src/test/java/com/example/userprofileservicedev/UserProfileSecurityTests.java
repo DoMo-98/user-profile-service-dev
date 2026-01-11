@@ -59,7 +59,7 @@ class UserProfileSecurityTests {
                 .content(objectMapper.writeValueAsString(loginRequest)))
                 .andReturn().getResponse().getContentAsString();
 
-        String token = objectMapper.readTree(response).get("access_token").asText();
+        String token = objectMapper.readTree(response).path("access_token").asString();
 
         // 2. Create profile
         CreateProfileRequest dto = CreateProfileRequest.builder()

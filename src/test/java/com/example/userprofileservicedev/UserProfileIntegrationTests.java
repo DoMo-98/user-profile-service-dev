@@ -153,6 +153,6 @@ class UserProfileIntegrationTests {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        return objectMapper.readTree(response).get("access_token").asText();
+        return objectMapper.readTree(response).path("access_token").asString();
     }
 }
