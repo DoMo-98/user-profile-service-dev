@@ -19,10 +19,6 @@ public final class ApiPaths {
     // Profile endpoints
     public static final String PROFILE = API_V1 + "/profile";
 
-    // HTTP Headers
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-    public static final String BEARER_PREFIX = "Bearer ";
-
     // Token types
     public static final String BEARER_TOKEN_TYPE = "Bearer";
 }
