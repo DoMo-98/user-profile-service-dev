@@ -4,6 +4,8 @@ import com.example.userprofileservicedev.constants.MessageKeys;
 import com.example.userprofileservicedev.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import tools.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
 @Component
+@NullMarked
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     private final MessageSource messageSource;
@@ -28,7 +31,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
-                         AuthenticationException authException) throws IOException {
+                         @Nullable AuthenticationException authException) throws IOException {
         String message = messageSource.getMessage(
                 MessageKeys.ERROR_UNAUTHORIZED,
                 null,
