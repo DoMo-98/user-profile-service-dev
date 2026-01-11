@@ -10,4 +10,9 @@ class UserProfileServiceDevApplicationTests {
     void contextLoads() {
     }
 
+    @Test
+    void main() {
+        UserProfileServiceDevApplication.main(new String[] {});
+    }
+
 }

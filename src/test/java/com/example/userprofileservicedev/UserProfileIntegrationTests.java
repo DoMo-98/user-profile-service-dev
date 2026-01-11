@@ -142,6 +142,61 @@ class UserProfileIntegrationTests {
                 .andExpect(jsonPath("$.message").value("Error de validación"));
     }
 
+    @Test
+    void whenUpdateProfileWithValidData_thenOk() throws Exception {
+        // 6) PUT /api/v1/profile con datos válidos -> 200
+        String token = obtainToken("user5");
+
+        CreateProfileRequest createReq = CreateProfileRequest.builder()
+                .firstName("Charlie")
+                .lastName("Brown")
+                .email("charlie@example.com")
+                .birthDate(LocalDate.of(1980, 8, 8))
+                .build();
+
+        mockMvc.perform(post("/api/v1/profile")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(createReq)))
+                .andExpect(status().isCreated());
+
+        UpdateProfileRequest updateReq = UpdateProfileRequest.builder()
+                .firstName("Charlie Updated")
+                .lastName("Brown")
+                .email("charlie.new@example.com")
+                .birthDate(LocalDate.of(1980, 8, 8))
+                .phoneNumber("123456789")
+                .build();
+
+        mockMvc.perform(put("/api/v1/profile")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateReq)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName").value("Charlie Updated"))
+                .andExpect(jsonPath("$.email").value("charlie.new@example.com"))
+                .andExpect(jsonPath("$.phoneNumber").value("123456789"));
+    }
+
+    @Test
+    void whenUpdateNonExistentProfile_thenNotFound() throws Exception {
+        // 7) PUT /api/v1/profile de un perfil que no existe -> 404
+        String token = obtainToken("user6");
+
+        UpdateProfileRequest updateReq = UpdateProfileRequest.builder()
+                .firstName("Non")
+                .lastName("Existent")
+                .email("non@example.com")
+                .birthDate(LocalDate.of(1990, 1, 1))
+                .build();
+
+        mockMvc.perform(put("/api/v1/profile")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateReq)))
+                .andExpect(status().isNotFound());
+    }
+
     private String obtainToken(String username) throws Exception {
         LoginRequest loginRequest = LoginRequest.builder()
                 .username(username)
