@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 
+import static com.example.userprofileservicedev.TestConstants.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -33,73 +34,73 @@ class UserProfileIntegrationTests {
 
     @Test
     void whenGetProfileWithoutToken_thenUnauthorized() throws Exception {
-        mockMvc.perform(get("/api/v1/profile"))
+        mockMvc.perform(get(API_V1_PROFILE))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     void whenCreateProfileWithValidToken_thenCreated() throws Exception {
-        String token = obtainToken("user1");
+        String token = obtainToken(USERNAME_USER1);
 
         CreateProfileRequest req = CreateProfileRequest.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .email("user1@example.com")
-                .birthDate(LocalDate.of(1990, 1, 1))
+                .firstName(FIRST_NAME_JOHN)
+                .lastName(LAST_NAME_DOE)
+                .email(EMAIL_USER1)
+                .birthDate(BIRTH_DATE_1990)
                 .build();
 
-        mockMvc.perform(post("/api/v1/profile")
-                .header("Authorization", "Bearer " + token)
+        mockMvc.perform(post(API_V1_PROFILE)
+                .header(AUTHORIZATION_HEADER, BEARER_PREFIX + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.email").value("user1@example.com"));
+                .andExpect(jsonPath(JSON_PATH_EMAIL).value(EMAIL_USER1));
     }
 
     @Test
     void whenGetProfileAfterCreation_thenOk() throws Exception {
-        String token = obtainToken("user2");
+        String token = obtainToken(USERNAME_USER2);
         CreateProfileRequest req = CreateProfileRequest.builder()
-                .firstName("Jane")
-                .lastName("Doe")
-                .email("user2@example.com")
-                .birthDate(LocalDate.of(1992, 2, 2))
+                .firstName(FIRST_NAME_JANE)
+                .lastName(LAST_NAME_DOE)
+                .email(EMAIL_USER2)
+                .birthDate(BIRTH_DATE_1992)
                 .build();
 
         // Create
-        mockMvc.perform(post("/api/v1/profile")
-                .header("Authorization", "Bearer " + token)
+        mockMvc.perform(post(API_V1_PROFILE)
+                .header(AUTHORIZATION_HEADER, BEARER_PREFIX + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isCreated());
 
         // Get
-        mockMvc.perform(get("/api/v1/profile")
-                .header("Authorization", "Bearer " + token))
+        mockMvc.perform(get(API_V1_PROFILE)
+                .header(AUTHORIZATION_HEADER, BEARER_PREFIX + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email").value("user2@example.com"));
+                .andExpect(jsonPath(JSON_PATH_EMAIL).value(EMAIL_USER2));
     }
 
     @Test
     void whenCreateProfileTwice_thenConflict() throws Exception {
-        String token = obtainToken("user3");
+        String token = obtainToken(USERNAME_USER3);
         CreateProfileRequest req = CreateProfileRequest.builder()
-                .firstName("Alice")
-                .lastName("Smith")
-                .email("alice@example.com")
-                .birthDate(LocalDate.of(1985, 5, 5))
+                .firstName(FIRST_NAME_ALICE)
+                .lastName(LAST_NAME_SMITH)
+                .email(EMAIL_ALICE)
+                .birthDate(BIRTH_DATE_1985)
                 .build();
 
         // First time
-        mockMvc.perform(post("/api/v1/profile")
-                .header("Authorization", "Bearer " + token)
+        mockMvc.perform(post(API_V1_PROFILE)
+                .header(AUTHORIZATION_HEADER, BEARER_PREFIX + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isCreated());
 
         // Second time
-        mockMvc.perform(post("/api/v1/profile")
-                .header("Authorization", "Bearer " + token)
+        mockMvc.perform(post(API_V1_PROFILE)
+                .header(AUTHORIZATION_HEADER, BEARER_PREFIX + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isConflict());
@@ -107,85 +108,85 @@ class UserProfileIntegrationTests {
 
     @Test
     void whenUpdateProfileWithFutureBirthDate_thenBadRequest() throws Exception {
-        String token = obtainToken("user4");
+        String token = obtainToken(USERNAME_USER4);
 
         CreateProfileRequest createReq = CreateProfileRequest.builder()
-                .firstName("Bob")
-                .lastName("Brown")
-                .email("bob@example.com")
-                .birthDate(LocalDate.of(1980, 8, 8))
+                .firstName(FIRST_NAME_BOB)
+                .lastName(LAST_NAME_BROWN)
+                .email(EMAIL_BOB)
+                .birthDate(BIRTH_DATE_1980)
                 .build();
 
-        mockMvc.perform(post("/api/v1/profile")
-                .header("Authorization", "Bearer " + token)
+        mockMvc.perform(post(API_V1_PROFILE)
+                .header(AUTHORIZATION_HEADER, BEARER_PREFIX + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createReq)))
                 .andExpect(status().isCreated());
 
         UpdateProfileRequest updateReq = UpdateProfileRequest.builder()
-                .firstName("Bob")
-                .lastName("Updated")
-                .email("bob@example.com")
+                .firstName(FIRST_NAME_BOB)
+                .lastName(LAST_NAME_UPDATED)
+                .email(EMAIL_BOB)
                 .birthDate(LocalDate.now().plusDays(1))
                 .build();
 
-        mockMvc.perform(put("/api/v1/profile")
-                .header("Authorization", "Bearer " + token)
+        mockMvc.perform(put(API_V1_PROFILE)
+                .header(AUTHORIZATION_HEADER, BEARER_PREFIX + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateReq)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.message").value("Validation error"));
+                .andExpect(jsonPath(JSON_PATH_STATUS).value(HTTP_STATUS_BAD_REQUEST))
+                .andExpect(jsonPath(JSON_PATH_MESSAGE).value(MSG_VALIDATION_ERROR));
     }
 
     @Test
     void whenUpdateProfileWithValidData_thenOk() throws Exception {
-        String token = obtainToken("user5");
+        String token = obtainToken(USERNAME_USER5);
 
         CreateProfileRequest createReq = CreateProfileRequest.builder()
-                .firstName("Charlie")
-                .lastName("Brown")
-                .email("charlie@example.com")
-                .birthDate(LocalDate.of(1980, 8, 8))
+                .firstName(FIRST_NAME_CHARLIE)
+                .lastName(LAST_NAME_BROWN)
+                .email(EMAIL_CHARLIE)
+                .birthDate(BIRTH_DATE_1980)
                 .build();
 
-        mockMvc.perform(post("/api/v1/profile")
-                .header("Authorization", "Bearer " + token)
+        mockMvc.perform(post(API_V1_PROFILE)
+                .header(AUTHORIZATION_HEADER, BEARER_PREFIX + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createReq)))
                 .andExpect(status().isCreated());
 
         UpdateProfileRequest updateReq = UpdateProfileRequest.builder()
-                .firstName("Charlie Updated")
-                .lastName("Brown")
-                .email("charlie.new@example.com")
-                .birthDate(LocalDate.of(1980, 8, 8))
-                .phoneNumber("123456789")
+                .firstName(FIRST_NAME_CHARLIE_UPDATED)
+                .lastName(LAST_NAME_BROWN)
+                .email(EMAIL_CHARLIE_NEW)
+                .birthDate(BIRTH_DATE_1980)
+                .phoneNumber(PHONE_NUMBER_DEFAULT)
                 .build();
 
-        mockMvc.perform(put("/api/v1/profile")
-                .header("Authorization", "Bearer " + token)
+        mockMvc.perform(put(API_V1_PROFILE)
+                .header(AUTHORIZATION_HEADER, BEARER_PREFIX + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateReq)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName").value("Charlie Updated"))
-                .andExpect(jsonPath("$.email").value("charlie.new@example.com"))
-                .andExpect(jsonPath("$.phoneNumber").value("123456789"));
+                .andExpect(jsonPath(JSON_PATH_FIRST_NAME).value(FIRST_NAME_CHARLIE_UPDATED))
+                .andExpect(jsonPath(JSON_PATH_EMAIL).value(EMAIL_CHARLIE_NEW))
+                .andExpect(jsonPath(JSON_PATH_PHONE_NUMBER).value(PHONE_NUMBER_DEFAULT));
     }
 
     @Test
     void whenUpdateNonExistentProfile_thenNotFound() throws Exception {
-        String token = obtainToken("user6");
+        String token = obtainToken(USERNAME_USER6);
 
         UpdateProfileRequest updateReq = UpdateProfileRequest.builder()
-                .firstName("Non")
-                .lastName("Existent")
-                .email("non@example.com")
-                .birthDate(LocalDate.of(1990, 1, 1))
+                .firstName(FIRST_NAME_NON)
+                .lastName(LAST_NAME_EXISTENT)
+                .email(EMAIL_NON)
+                .birthDate(BIRTH_DATE_1990)
                 .build();
 
-        mockMvc.perform(put("/api/v1/profile")
-                .header("Authorization", "Bearer " + token)
+        mockMvc.perform(put(API_V1_PROFILE)
+                .header(AUTHORIZATION_HEADER, BEARER_PREFIX + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateReq)))
                 .andExpect(status().isNotFound());
@@ -196,12 +197,12 @@ class UserProfileIntegrationTests {
                 .username(username)
                 .build();
 
-        String response = mockMvc.perform(post("/api/v1/auth/login")
+        String response = mockMvc.perform(post(API_V1_AUTH_LOGIN)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        return objectMapper.readTree(response).path("access_token").asString();
+        return objectMapper.readTree(response).path(ACCESS_TOKEN_FIELD).asString();
     }
 }

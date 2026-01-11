@@ -2,6 +2,7 @@ package com.example.userprofileservicedev.mapper;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import static com.example.userprofileservicedev.TestConstants.*;
 
 class UserProfileMapperTests {
 
@@ -9,7 +10,7 @@ class UserProfileMapperTests {
 
     @Test
     void whenReqIsNull_thenFromCreateReturnsNull() {
-        assertNull(mapper.fromCreate("id", null));
+        assertNull(mapper.fromCreate(TEST_USER_ID, null));
     }
 
     @Test
