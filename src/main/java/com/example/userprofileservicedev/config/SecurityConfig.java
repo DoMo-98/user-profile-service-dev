@@ -22,13 +22,17 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Value("${app.jwt.secret}")
-    private String jwtSecret;
+    private final String jwtSecret;
+
+    public SecurityConfig(@Value("${app.jwt.secret}") String jwtSecret) {
+        this.jwtSecret = jwtSecret;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -48,13 +52,13 @@ public class SecurityConfig {
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        SecretKey secretKey = new SecretKeySpec(this.jwtSecret.getBytes(), "HmacSHA256");
+        SecretKey secretKey = new SecretKeySpec(this.jwtSecret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
         return NimbusJwtDecoder.withSecretKey(secretKey).build();
     }
 
     @Bean
     public JwtEncoder jwtEncoder() {
-        JWK jwk = new OctetSequenceKey.Builder(this.jwtSecret.getBytes())
+        JWK jwk = new OctetSequenceKey.Builder(this.jwtSecret.getBytes(StandardCharsets.UTF_8))
                 .algorithm(JWSAlgorithm.HS256)
                 .build();
         JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));

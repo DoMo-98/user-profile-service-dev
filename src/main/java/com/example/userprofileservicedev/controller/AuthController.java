@@ -22,15 +22,15 @@ import java.time.Instant;
 public class AuthController {
 
     private final JwtEncoder encoder;
+    private final String issuer;
+    private final Duration ttl;
 
-    @Value("${app.jwt.issuer}")
-    private String issuer;
-
-    @Value("${app.jwt.ttl}")
-    private Duration ttl;
-
-    public AuthController(JwtEncoder encoder) {
+    public AuthController(JwtEncoder encoder,
+                          @Value("${app.jwt.issuer}") String issuer,
+                          @Value("${app.jwt.ttl}") Duration ttl) {
         this.encoder = encoder;
+        this.issuer = issuer;
+        this.ttl = ttl;
     }
 
     @PostMapping("/login")
