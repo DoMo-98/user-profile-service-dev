@@ -8,6 +8,8 @@ import com.example.userprofileservicedev.exception.ConflictException;
 import com.example.userprofileservicedev.exception.NotFoundException;
 import com.example.userprofileservicedev.mapper.UserProfileMapper;
 import com.example.userprofileservicedev.repository.UserProfileRepository;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,21 +19,23 @@ public class UserProfileService {
 
     private final UserProfileRepository repository;
     private final UserProfileMapper mapper;
+    private final MessageSource messageSource;
 
-    public UserProfileService(UserProfileRepository repository, UserProfileMapper mapper) {
+    public UserProfileService(UserProfileRepository repository, UserProfileMapper mapper, MessageSource messageSource) {
         this.repository = repository;
         this.mapper = mapper;
+        this.messageSource = messageSource;
     }
 
     public ProfileResponse getMyProfile(String userId) {
         UserProfile profile = repository.findByUserId(userId)
-                .orElseThrow(() -> new NotFoundException("Perfil no encontrado"));
+                .orElseThrow(() -> new NotFoundException(getMessage("error.profile.notfound")));
         return mapper.toResponse(profile);
     }
 
     public ProfileResponse createMyProfile(String userId, CreateProfileRequest req) {
         if (repository.existsByUserId(userId)) {
-            throw new ConflictException("El perfil ya existe para este usuario");
+            throw new ConflictException(getMessage("error.profile.conflict"));
         }
         UserProfile profile = mapper.fromCreate(userId, req);
         return mapper.toResponse(repository.save(profile));
@@ -39,10 +43,14 @@ public class UserProfileService {
 
     public ProfileResponse putMyProfile(String userId, UpdateProfileRequest req) {
         UserProfile profile = repository.findByUserId(userId)
-                .orElseThrow(() -> new NotFoundException("Perfil no encontrado"));
+                .orElseThrow(() -> new NotFoundException(getMessage("error.profile.notfound")));
 
         mapper.applyPut(profile, req);
 
         return mapper.toResponse(repository.save(profile));
+    }
+
+    private String getMessage(String code) {
+        return messageSource.getMessage(code, null, LocaleContextHolder.getLocale());
     }
 }

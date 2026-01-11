@@ -142,7 +142,7 @@ class UserProfileIntegrationTests {
                 .content(objectMapper.writeValueAsString(updateReq)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.message").value("Error de validación"));
+                .andExpect(jsonPath("$.message").value("Validation error"));
     }
 
     @Test

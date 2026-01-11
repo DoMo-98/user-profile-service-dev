@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: user-profile-service-dev
+  messages:
+    encoding: UTF-8
   h2:
     console:
       enabled: true

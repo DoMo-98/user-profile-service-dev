@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class LoginRequest {
-    @NotBlank(message = "El nombre de usuario es obligatorio")
+    @NotBlank(message = "{validation.username.required}")
     private String username;
     private String password; // Opcional según requerimiento, no se valida
 }

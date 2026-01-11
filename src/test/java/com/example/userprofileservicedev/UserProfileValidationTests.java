@@ -43,7 +43,7 @@ class UserProfileValidationTests {
                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.message").value("Error de validación"))
+                .andExpect(jsonPath("$.message").value("Validation error"))
                 .andExpect(jsonPath("$.path").value("/api/v1/profile"))
                 .andExpect(jsonPath("$.fieldErrors").isArray());
     }
@@ -65,7 +65,7 @@ class UserProfileValidationTests {
                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.message").value("Error de validación"))
+                .andExpect(jsonPath("$.message").value("Validation error"))
                 .andExpect(jsonPath("$.path").value("/api/v1/profile"))
                 .andExpect(jsonPath("$.fieldErrors").isArray());
     }

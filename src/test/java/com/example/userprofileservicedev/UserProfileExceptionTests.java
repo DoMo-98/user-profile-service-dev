@@ -35,7 +35,7 @@ class UserProfileExceptionTests {
                 .header("Authorization", "Bearer " + token))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status").value(404))
-                .andExpect(jsonPath("$.message").value("Perfil no encontrado"))
+                .andExpect(jsonPath("$.message").value("Profile not found"))
                 .andExpect(jsonPath("$.path").value("/api/v1/profile"));
     }
 
@@ -64,7 +64,7 @@ class UserProfileExceptionTests {
                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.status").value(409))
-                .andExpect(jsonPath("$.message").value("El perfil ya existe para este usuario"))
+                .andExpect(jsonPath("$.message").value("Profile already exists for this user"))
                 .andExpect(jsonPath("$.path").value("/api/v1/profile"));
     }
 

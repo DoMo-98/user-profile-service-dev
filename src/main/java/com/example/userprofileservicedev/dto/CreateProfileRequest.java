@@ -17,18 +17,18 @@ import java.time.LocalDate;
 @Builder
 public class CreateProfileRequest {
 
-    @NotBlank(message = "El email es obligatorio")
-    @Email(message = "El formato del email no es válido")
+    @NotBlank(message = "{validation.email.required}")
+    @Email(message = "{validation.email.invalid}")
     private String email;
 
-    @NotBlank(message = "El nombre es obligatorio")
+    @NotBlank(message = "{validation.firstName.required}")
     private String firstName;
 
-    @NotBlank(message = "El apellido es obligatorio")
+    @NotBlank(message = "{validation.lastName.required}")
     private String lastName;
 
-    @NotNull(message = "La fecha de nacimiento es obligatoria")
-    @Past(message = "La fecha de nacimiento debe estar en el pasado")
+    @NotNull(message = "{validation.birthDate.required}")
+    @Past(message = "{validation.birthDate.past}")
     private LocalDate birthDate;
 
     private String phoneNumber;
