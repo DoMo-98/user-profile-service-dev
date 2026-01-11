@@ -12,13 +12,14 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class UserProfileValidationTests {
+class UserProfileExceptionTests {
 
     @Autowired
     private MockMvc mockMvc;
@@ -27,52 +28,49 @@ class UserProfileValidationTests {
     private ObjectMapper objectMapper;
 
     @Test
-    void whenCreateWithInvalidEmail_thenBadRequest() throws Exception {
-        String token = obtainToken();
+    void whenProfileNotFound_then404() throws Exception {
+        String token = obtainToken("notfounduser");
 
-        CreateProfileRequest req = CreateProfileRequest.builder()
-                .firstName("Test")
-                .lastName("User")
-                .email("invalid-email")
-                .birthDate(LocalDate.of(1990, 1, 1))
-                .build();
-
-        mockMvc.perform(post("/api/v1/profile")
-                .header("Authorization", "Bearer " + token)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(req)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.message").value("Error de validación"))
-                .andExpect(jsonPath("$.path").value("/api/v1/profile"))
-                .andExpect(jsonPath("$.fieldErrors").isArray());
+        mockMvc.perform(get("/api/v1/profile")
+                .header("Authorization", "Bearer " + token))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.message").value("Perfil no encontrado"))
+                .andExpect(jsonPath("$.path").value("/api/v1/profile"));
     }
 
     @Test
-    void whenCreateWithFutureBirthDate_thenBadRequest() throws Exception {
-        String token = obtainToken();
+    void whenProfileConflict_then409() throws Exception {
+        String token = obtainToken("conflictuser");
 
         CreateProfileRequest req = CreateProfileRequest.builder()
-                .firstName("Test")
+                .firstName("Conflict")
                 .lastName("User")
-                .email("test@example.com")
-                .birthDate(LocalDate.now().plusDays(1))
+                .email("conflict@example.com")
+                .birthDate(LocalDate.of(1990, 1, 1))
                 .build();
 
+        // First creation
         mockMvc.perform(post("/api/v1/profile")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(req)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.message").value("Error de validación"))
-                .andExpect(jsonPath("$.path").value("/api/v1/profile"))
-                .andExpect(jsonPath("$.fieldErrors").isArray());
+                .andExpect(status().isCreated());
+
+        // Duplicate creation
+        mockMvc.perform(post("/api/v1/profile")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.status").value(409))
+                .andExpect(jsonPath("$.message").value("El perfil ya existe para este usuario"))
+                .andExpect(jsonPath("$.path").value("/api/v1/profile"));
     }
 
-    private String obtainToken() throws Exception {
+    private String obtainToken(String username) throws Exception {
         LoginRequest loginRequest = LoginRequest.builder()
-                .username("validator")
+                .username(username)
                 .build();
 
         String response = mockMvc.perform(post("/api/v1/auth/login")
