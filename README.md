@@ -1,39 +1,39 @@
 # User Profile Service (Dev)
 
-Microservicio REST desarrollado con Spring Boot 4 y Java 25 para la gestión de perfiles de usuario autenticados.
+REST microservice developed with Spring Boot 4 and Java 25 for managing authenticated user profiles.
 
-## Requisitos
+## Requirements
 
 - **Java 25**
 - **Gradle**
 
-## Cómo ejecutar
+## How to Run
 
-Para iniciar la aplicación, ejecuta el siguiente comando en la raíz del proyecto:
+To start the application, execute the following command at the project root:
 
 ```bash
 ./gradlew bootRun
 ```
 
-La aplicación estará disponible por defecto en `http://localhost:8080`.
+The application will be available by default at `http://localhost:8080`.
 
-## Documentación de la API
+## API Documentation
 
-### 1. Obtención de Token (Modo Dev)
+### 1. Token Acquisition (Dev Mode)
 
-Para facilitar las pruebas, el microservicio incluye un endpoint de login que genera tokens válidos sin necesidad de validación de contraseña compleja.
+To facilitate testing, the microservice includes a login endpoint that generates valid tokens without requiring complex password validation.
 
 **Endpoint:** `POST /api/v1/auth/login`
 
-**Ejemplo curl:**
+**Example curl:**
 
 ```bash
 curl -X POST http://localhost:8080/api/v1/auth/login \
      -H "Content-Type: application/json" \
-     -d '{"username": "juan_perez"}'
+     -d '{"username": "john_doe"}'
 ```
 
-**Respuesta:**
+**Response:**
 
 ```json
 {
@@ -45,89 +45,89 @@ curl -X POST http://localhost:8080/api/v1/auth/login \
 
 ---
 
-### 2. Gestión del Perfil del Usuario
+### 2. User Profile Management
 
-Todos los endpoints bajo `/api/v1/profile` requieren el token obtenido anteriormente en la cabecera `Authorization`.
+All endpoints under `/api/v1/profile` require the token obtained previously in the `Authorization` header.
 
-#### Crear Perfil (POST)
+#### Create Profile (POST)
 
-Permite crear el perfil asociado al usuario del token. Si ya existe, devuelve un error 409 Conflict.
+Allows creating the profile associated with the token user. If it already exists, returns a 409 Conflict error.
 
-**Ejemplo curl:**
+**Example curl:**
 
 ```bash
 curl -X POST http://localhost:8080/api/v1/profile \
-     -H "Authorization: Bearer <TU_TOKEN>" \
+     -H "Authorization: Bearer <YOUR_TOKEN>" \
      -H "Content-Type: application/json" \
      -d '{
-           "email": "juan.perez@example.com",
-           "firstName": "Juan",
-           "lastName": "Perez",
+           "email": "john.doe@example.com",
+           "firstName": "John",
+           "lastName": "Doe",
            "birthDate": "1990-05-15",
-           "phoneNumber": "600000000",
-           "street": "Gran Vía 1",
-           "city": "Madrid",
-           "country": "España",
-           "postalCode": "28013"
+           "phoneNumber": "555-0100",
+           "street": "123 Main St",
+           "city": "New York",
+           "country": "USA",
+           "postalCode": "10001"
          }'
 ```
 
-#### Obtener Mi Perfil (GET)
+#### Get My Profile (GET)
 
-Devuelve los datos del perfil del usuario autenticado.
+Returns the profile data of the authenticated user.
 
-**Ejemplo curl:**
+**Example curl:**
 
 ```bash
 curl -X GET http://localhost:8080/api/v1/profile \
-     -H "Authorization: Bearer <TU_TOKEN>"
+     -H "Authorization: Bearer <YOUR_TOKEN>"
 ```
 
-#### Actualizar Perfil (PUT - Full Replace)
+#### Update Profile (PUT - Full Replace)
 
-Realiza un reemplazo completo del perfil. Los campos no incluidos en la petición se establecerán a nulo (si son opcionales).
+Performs a complete replacement of the profile. Fields not included in the request will be set to null (if they are optional).
 
-**Ejemplo curl:**
+**Example curl:**
 
 ```bash
 curl -X PUT http://localhost:8080/api/v1/profile \
-     -H "Authorization: Bearer <TU_TOKEN>" \
+     -H "Authorization: Bearer <YOUR_TOKEN>" \
      -H "Content-Type: application/json" \
      -d '{
-           "email": "juan.perez.updated@example.com",
-           "firstName": "Juan Carlos",
-           "lastName": "Perez Garcia",
+           "email": "john.doe.updated@example.com",
+           "firstName": "John Michael",
+           "lastName": "Doe Smith",
            "birthDate": "1990-05-15"
          }'
 ```
 
 ---
 
-## Notas y Decisiones de Diseño
+## Design Notes and Decisions
 
-- **Identificación de Usuario**: El `userId` no se envía nunca en el cuerpo o la URL; se extrae exclusivamente de la claim `sub` del JWT.
-- **Base de Datos H2**: Se utiliza una base de datos en memoria para desarrollo.
-  - **Consola H2**: `http://localhost:8080/h2-console`
+- **User Identification**: The `userId` is never sent in the body or URL; it is extracted exclusively from the `sub` claim of the JWT.
+- **H2 Database**: An in-memory database is used for development.
+  - **H2 Console**: `http://localhost:8080/h2-console`
   - **JDBC URL**: `jdbc:h2:mem:testdb`
-  - **Credenciales**: `sa` / `password`
-- **Validaciones**: Se utiliza Bean Validation para asegurar la integridad de los datos (`@Email`, `@Past`, `@NotBlank`).
-- **Gestión de Errores**: Se ha implementado un `@RestControllerAdvice` para devolver respuestas de error consistentes (400, 401, 404, 409) con detalles de los campos en caso de errores de validación.
-- **PUT (Full Replace)**: Siguiendo la semántica HTTP PUT, el endpoint de actualización reemplaza la entidad completa. Es responsabilidad del cliente enviar todos los campos que desea conservar.
+  - **Credentials**: `sa` / `password`
+- **Validations**: Bean Validation is used to ensure data integrity (`@Email`, `@Past`, `@NotBlank`).
+- **Error Handling**: A `@RestControllerAdvice` has been implemented to return consistent error responses (400, 401, 404, 409) with field details in case of validation errors.
+- **PUT (Full Replace)**: Following HTTP PUT semantics, the update endpoint replaces the entire entity. It is the client's responsibility to send all fields it wishes to preserve.
 
-## Suposiciones y Tradeoffs
+## Assumptions and Tradeoffs
 
-### Suposiciones
+### Assumptions
 
-- **birthDate opcional**: Se asume que la fecha de nacimiento es un campo opcional, ya que no todos los usuarios pueden querer proporcionarla por privacidad.
-- **Email único global**: Se asume que el email debe ser único en todo el sistema, no solo por usuario.
-- **Autenticación simplificada**: El endpoint de login genera tokens sin validación de contraseña, asumiendo un entorno de desarrollo/pruebas.
-- **Un perfil por usuario**: Se asume que cada usuario autenticado solo puede tener un perfil asociado a su `userId`.
+- **Optional birthDate**: It is assumed that birth date is an optional field, as not all users may want to provide it for privacy reasons.
+- **Globally unique email**: It is assumed that email must be unique throughout the system, not just per user.
+- **Simplified authentication**: The login endpoint generates tokens without password validation, assuming a development/testing environment.
+- **One profile per user**: It is assumed that each authenticated user can only have one profile associated with their `userId`.
 
 ### Tradeoffs
 
-- **PUT full replace vs PATCH**: Se optó por PUT con reemplazo completo en lugar de PATCH parcial por simplicidad de implementación y límite de tiempo. El cliente debe enviar todos los campos en cada actualización.
-- **H2 en memoria vs BD persistente**: Se priorizó la facilidad de setup y pruebas sobre la persistencia real de datos. En producción se recomendaría PostgreSQL o similar.
-- **Validación en capa DTO**: Las validaciones se realizan en DTOs en lugar de en la entidad para tener control granular sobre qué se valida en creación vs actualización.
-- **Mensajes i18n hardcodeados en inglés**: Por límite de tiempo, solo se incluye el archivo de mensajes en inglés, aunque la infraestructura soporta múltiples idiomas.
-- **Manejo genérico de DataIntegrityViolationException**: Se asume que cualquier violación de integridad es por email duplicado. En un sistema más robusto se analizaría el mensaje de error para dar feedback más específico.
+- **PUT full replace vs PATCH**: We opted for PUT with full replacement instead of partial PATCH for implementation simplicity and time constraints. The client must send all fields with each update.
+- **H2 in-memory vs persistent DB**: Ease of setup and testing was prioritized over real data persistence. In production, PostgreSQL or similar would be recommended.
+- **DTO layer validation**: Validations are performed on DTOs instead of the entity to have granular control over what is validated on creation vs update.
+- **Hardcoded i18n messages in English**: Due to time constraints, only the English message file is included, although the infrastructure supports multiple languages.
+- **Generic DataIntegrityViolationException handling**: It is assumed that any integrity violation is due to duplicate email. In a more robust system, the error message would be analyzed to give more specific feedback.
 

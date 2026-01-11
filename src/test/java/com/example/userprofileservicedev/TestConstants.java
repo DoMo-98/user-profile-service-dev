@@ -3,13 +3,13 @@ package com.example.userprofileservicedev;
 import java.time.LocalDate;
 
 /**
- * Constantes para los tests de la aplicación.
- * Centraliza todos los literales para mejorar la mantenibilidad.
+ * Constants for application tests.
+ * Centralizes all literals to improve maintainability.
  */
 public final class TestConstants {
 
     private TestConstants() {
-        throw new UnsupportedOperationException("Esta es una clase de utilidad y no puede ser instanciada");
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
     // ===================== API Paths =====================

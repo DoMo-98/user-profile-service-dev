@@ -1,12 +1,12 @@
 package com.example.userprofileservicedev.constants;
 
 /**
- * Constantes para las rutas de los endpoints de la API.
+ * Constants for API endpoint routes.
  */
 public final class ApiPaths {
 
     private ApiPaths() {
-        throw new UnsupportedOperationException("Esta es una clase de utilidad y no puede ser instanciada");
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
     // Base paths

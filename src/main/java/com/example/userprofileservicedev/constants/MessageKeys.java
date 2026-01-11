@@ -1,13 +1,13 @@
 package com.example.userprofileservicedev.constants;
 
 /**
- * Constantes para las claves de mensajes de internacionalización (i18n).
- * Estas claves se resuelven desde el archivo messages.properties.
+ * Constants for internationalization (i18n) message keys.
+ * These keys are resolved from the messages.properties file.
  */
 public final class MessageKeys {
 
     private MessageKeys() {
-        throw new UnsupportedOperationException("Esta es una clase de utilidad y no puede ser instanciada");
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
     // Validation Messages
