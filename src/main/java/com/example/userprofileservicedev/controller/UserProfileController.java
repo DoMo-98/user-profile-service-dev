@@ -22,17 +22,17 @@ public class UserProfileController {
 
     @GetMapping
     public ProfileResponse getProfile(@AuthenticationPrincipal Jwt jwt) {
-        return service.getProfile(jwt.getSubject());
+        return service.getMyProfile(jwt.getSubject());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ProfileResponse createProfile(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody CreateProfileRequest req) {
-        return service.createProfile(jwt.getSubject(), req);
+        return service.createMyProfile(jwt.getSubject(), req);
     }
 
     @PutMapping
     public ProfileResponse updateProfile(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody UpdateProfileRequest req) {
-        return service.updateProfile(jwt.getSubject(), req);
+        return service.putMyProfile(jwt.getSubject(), req);
     }
 }
