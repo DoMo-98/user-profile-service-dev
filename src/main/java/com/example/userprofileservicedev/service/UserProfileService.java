@@ -38,6 +38,9 @@ public class UserProfileService {
         if (repository.existsByUserId(userId)) {
             throw new ConflictException(getMessage(MessageKeys.ERROR_PROFILE_CONFLICT));
         }
+        if (repository.existsByEmail(req.getEmail())) {
+            throw new ConflictException(getMessage(MessageKeys.ERROR_PROFILE_CONFLICT));
+        }
         UserProfile profile = mapper.fromCreate(userId, req);
         return mapper.toResponse(repository.save(profile));
     }
@@ -46,9 +49,19 @@ public class UserProfileService {
         UserProfile profile = repository.findByUserId(userId)
                 .orElseThrow(() -> new NotFoundException(getMessage(MessageKeys.ERROR_PROFILE_NOT_FOUND)));
 
+        if (isEmailOwnedByDifferentUser(userId, req.getEmail())) {
+            throw new ConflictException(getMessage(MessageKeys.ERROR_PROFILE_CONFLICT));
+        }
+
         mapper.applyPut(profile, req);
 
         return mapper.toResponse(repository.save(profile));
+    }
+
+    private boolean isEmailOwnedByDifferentUser(String userId, String email) {
+        return repository.findByEmail(email)
+                .map(existing -> !existing.getUserId().equals(userId))
+                .orElse(false);
     }
 
     private String getMessage(String code) {

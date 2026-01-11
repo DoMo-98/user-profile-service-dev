@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS user_profiles (
     email VARCHAR(255) NOT NULL UNIQUE,
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
-    birth_date DATE NOT NULL,
+    birth_date DATE,
     phone_number VARCHAR(255),
     street VARCHAR(255),
     city VARCHAR(255),

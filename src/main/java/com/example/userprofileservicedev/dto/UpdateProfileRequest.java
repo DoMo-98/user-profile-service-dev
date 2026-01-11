@@ -2,7 +2,6 @@ package com.example.userprofileservicedev.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +26,6 @@ public class UpdateProfileRequest {
     @NotBlank(message = "{validation.lastName.required}")
     private String lastName;
 
-    @NotNull(message = "{validation.birthDate.required}")
     @Past(message = "{validation.birthDate.past}")
     private LocalDate birthDate;
 
