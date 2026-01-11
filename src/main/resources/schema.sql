@@ -1,3 +1,4 @@
+-- H2 Database Schema
 CREATE TABLE IF NOT EXISTS user_profiles (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id VARCHAR(255) NOT NULL UNIQUE,
