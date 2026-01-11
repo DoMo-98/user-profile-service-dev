@@ -49,6 +49,17 @@ tasks.withType<Test> {
 }
 
 tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+
+    classDirectories.setFrom(files(classDirectories.files.map {
+        fileTree(it) {
+            exclude(
+                "**/constants/**",
+                "**/exception/*Exception.class"
+            )
+        }
+    }))
+
     reports {
         xml.required.set(true)
         html.required.set(true)

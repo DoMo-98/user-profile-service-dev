@@ -17,6 +17,48 @@ To start the application, execute the following command at the project root:
 
 The application will be available by default at `http://localhost:8080`.
 
+## How to Run Tests
+
+### Run All Tests
+
+To execute all tests in the project:
+
+```bash
+./gradlew test
+```
+
+### Run Tests with Coverage Report
+
+Tests automatically generate a Jacoco coverage report. After running the tests, you can view the HTML report at:
+
+```
+build/reports/jacoco/test/html/index.html
+```
+
+### Run a Specific Test Class
+
+To run a specific test class:
+
+```bash
+./gradlew test --tests "com.example.userprofileservicedev.UserProfileIntegrationTests"
+```
+
+### Run Tests in Continuous Mode
+
+To run tests automatically when code changes:
+
+```bash
+./gradlew test --continuous
+```
+
+### Clean and Test
+
+To ensure a clean build before running tests:
+
+```bash
+./gradlew clean test
+```
+
 ## API Documentation
 
 ### 1. Token Acquisition (Dev Mode)

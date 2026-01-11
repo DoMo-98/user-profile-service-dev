@@ -67,6 +67,44 @@ class UserProfileExceptionTests {
                 .andExpect(jsonPath(JSON_PATH_PATH).value(API_V1_PROFILE));
     }
 
+    @Test
+    void whenEmailConflict_thenDataIntegrityViolation_returns409() throws Exception {
+        String token1 = obtainToken("user_email_conflict_1");
+        String token2 = obtainToken("user_email_conflict_2");
+
+        String duplicateEmail = "duplicate@example.com";
+
+        CreateProfileRequest req1 = CreateProfileRequest.builder()
+                .firstName("User")
+                .lastName("One")
+                .email(duplicateEmail)
+                .birthDate(BIRTH_DATE_1990)
+                .build();
+
+        CreateProfileRequest req2 = CreateProfileRequest.builder()
+                .firstName("User")
+                .lastName("Two")
+                .email(duplicateEmail)
+                .birthDate(BIRTH_DATE_1990)
+                .build();
+
+        // First user creates profile with email
+        mockMvc.perform(post(API_V1_PROFILE)
+                .header(AUTHORIZATION_HEADER, BEARER_PREFIX + token1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req1)))
+                .andExpect(status().isCreated());
+
+        // Second user tries to create profile with same email (DataIntegrityViolation)
+        mockMvc.perform(post(API_V1_PROFILE)
+                .header(AUTHORIZATION_HEADER, BEARER_PREFIX + token2)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req2)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath(JSON_PATH_STATUS).value(HTTP_STATUS_CONFLICT))
+                .andExpect(jsonPath(JSON_PATH_PATH).value(API_V1_PROFILE));
+    }
+
     private String obtainToken(String username) throws Exception {
         LoginRequest loginRequest = LoginRequest.builder()
                 .username(username)
