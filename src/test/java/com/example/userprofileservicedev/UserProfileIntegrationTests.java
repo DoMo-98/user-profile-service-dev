@@ -33,14 +33,12 @@ class UserProfileIntegrationTests {
 
     @Test
     void whenGetProfileWithoutToken_thenUnauthorized() throws Exception {
-        // 1) GET /api/v1/profile sin Authorization -> 401
         mockMvc.perform(get("/api/v1/profile"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     void whenCreateProfileWithValidToken_thenCreated() throws Exception {
-        // 2) POST /api/v1/profile con token válido -> 201
         String token = obtainToken("user1");
 
         CreateProfileRequest req = CreateProfileRequest.builder()
@@ -60,7 +58,6 @@ class UserProfileIntegrationTests {
 
     @Test
     void whenGetProfileAfterCreation_thenOk() throws Exception {
-        // 3) GET /api/v1/profile con token válido tras crear -> 200
         String token = obtainToken("user2");
         CreateProfileRequest req = CreateProfileRequest.builder()
                 .firstName("Jane")
@@ -69,14 +66,14 @@ class UserProfileIntegrationTests {
                 .birthDate(LocalDate.of(1992, 2, 2))
                 .build();
 
-        // Crear
+        // Create
         mockMvc.perform(post("/api/v1/profile")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isCreated());
 
-        // Obtener
+        // Get
         mockMvc.perform(get("/api/v1/profile")
                 .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
@@ -85,7 +82,6 @@ class UserProfileIntegrationTests {
 
     @Test
     void whenCreateProfileTwice_thenConflict() throws Exception {
-        // 4) POST /api/v1/profile dos veces con el mismo token -> 409
         String token = obtainToken("user3");
         CreateProfileRequest req = CreateProfileRequest.builder()
                 .firstName("Alice")
@@ -94,14 +90,14 @@ class UserProfileIntegrationTests {
                 .birthDate(LocalDate.of(1985, 5, 5))
                 .build();
 
-        // Primera vez
+        // First time
         mockMvc.perform(post("/api/v1/profile")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isCreated());
 
-        // Segunda vez
+        // Second time
         mockMvc.perform(post("/api/v1/profile")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -111,10 +107,8 @@ class UserProfileIntegrationTests {
 
     @Test
     void whenUpdateProfileWithFutureBirthDate_thenBadRequest() throws Exception {
-        // 5) PUT /api/v1/profile con birthDate futura -> 400
         String token = obtainToken("user4");
-        
-        // Primero creamos un perfil válido para poder actualizarlo
+
         CreateProfileRequest createReq = CreateProfileRequest.builder()
                 .firstName("Bob")
                 .lastName("Brown")
@@ -128,12 +122,11 @@ class UserProfileIntegrationTests {
                 .content(objectMapper.writeValueAsString(createReq)))
                 .andExpect(status().isCreated());
 
-        // Intentamos actualizar con fecha futura
         UpdateProfileRequest updateReq = UpdateProfileRequest.builder()
                 .firstName("Bob")
                 .lastName("Updated")
                 .email("bob@example.com")
-                .birthDate(LocalDate.now().plusDays(1)) // FUTURO
+                .birthDate(LocalDate.now().plusDays(1))
                 .build();
 
         mockMvc.perform(put("/api/v1/profile")
@@ -147,7 +140,6 @@ class UserProfileIntegrationTests {
 
     @Test
     void whenUpdateProfileWithValidData_thenOk() throws Exception {
-        // 6) PUT /api/v1/profile con datos válidos -> 200
         String token = obtainToken("user5");
 
         CreateProfileRequest createReq = CreateProfileRequest.builder()
@@ -183,7 +175,6 @@ class UserProfileIntegrationTests {
 
     @Test
     void whenUpdateNonExistentProfile_thenNotFound() throws Exception {
-        // 7) PUT /api/v1/profile de un perfil que no existe -> 404
         String token = obtainToken("user6");
 
         UpdateProfileRequest updateReq = UpdateProfileRequest.builder()

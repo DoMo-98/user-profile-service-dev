@@ -39,7 +39,7 @@ class UserProfileSecurityTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.access_token").exists())
                 .andExpect(jsonPath("$.token_type").value("Bearer"))
-                .andExpect(jsonPath("$.expires_in_seconds").value(1800)); // 30m = 1800s
+                .andExpect(jsonPath("$.expires_in_seconds").value(1800));
     }
 
     @Test
@@ -50,7 +50,7 @@ class UserProfileSecurityTests {
 
     @Test
     void whenAccessWithToken_thenSuccess() throws Exception {
-        // 1. Login to get token
+        // Login to get token
         LoginRequest loginRequest = LoginRequest.builder()
                 .username("testuser")
                 .build();
@@ -62,7 +62,7 @@ class UserProfileSecurityTests {
 
         String token = objectMapper.readTree(response).path("access_token").asString();
 
-        // 2. Create profile
+        // Create profile
         CreateProfileRequest dto = CreateProfileRequest.builder()
                 .firstName("Test")
                 .lastName("User")
@@ -76,7 +76,7 @@ class UserProfileSecurityTests {
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isCreated());
 
-        // 3. Get profile
+        // Get profile
         mockMvc.perform(get("/api/v1/profile")
                 .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
