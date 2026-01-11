@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
-                .message(getMessage(MessageKeys.VALIDATION_ERROR))
+                .message(getMessage())
                 .path(request.getRequestURI())
                 .fieldErrors(fieldErrors)
                 .build();
@@ -61,7 +61,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
 
-    private String getMessage(String code) {
-        return messageSource.getMessage(code, null, LocaleContextHolder.getLocale());
+    private String getMessage() {
+        return messageSource.getMessage(MessageKeys.VALIDATION_ERROR, null, LocaleContextHolder.getLocale());
     }
 }
