@@ -1,5 +1,6 @@
 package com.example.userprofileservicedev.dto;
 
+import com.example.userprofileservicedev.constants.MessageKeys;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -17,18 +18,18 @@ import java.time.LocalDate;
 @Builder
 public class CreateProfileRequest {
 
-    @NotBlank(message = "{validation.email.required}")
-    @Email(message = "{validation.email.invalid}")
+    @NotBlank(message = "{" + MessageKeys.VALIDATION_EMAIL_REQUIRED + "}")
+    @Email(message = "{" + MessageKeys.VALIDATION_EMAIL_INVALID + "}")
     private String email;
 
-    @NotBlank(message = "{validation.firstName.required}")
+    @NotBlank(message = "{" + MessageKeys.VALIDATION_FIRSTNAME_REQUIRED + "}")
     private String firstName;
 
-    @NotBlank(message = "{validation.lastName.required}")
+    @NotBlank(message = "{" + MessageKeys.VALIDATION_LASTNAME_REQUIRED + "}")
     private String lastName;
 
-    @NotNull(message = "{validation.birthDate.required}")
-    @Past(message = "{validation.birthDate.past}")
+    @NotNull(message = "{" + MessageKeys.VALIDATION_BIRTHDATE_REQUIRED + "}")
+    @Past(message = "{" + MessageKeys.VALIDATION_BIRTHDATE_PAST + "}")
     private LocalDate birthDate;
 
     private String phoneNumber;
