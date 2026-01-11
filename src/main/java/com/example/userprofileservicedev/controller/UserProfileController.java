@@ -23,7 +23,6 @@ public class UserProfileController {
 
     @GetMapping
     public ResponseEntity<ProfileResponse> getProfile(@AuthenticationPrincipal Jwt jwt) {
-        // Obtenemos el userId directamente de la claim "sub" del token JWT inyectado
         String userId = jwt.getSubject();
         return ResponseEntity.ok(service.getMyProfile(userId));
     }
@@ -32,7 +31,6 @@ public class UserProfileController {
     public ResponseEntity<ProfileResponse> createProfile(
             @AuthenticationPrincipal Jwt jwt,
             @Valid @RequestBody CreateProfileRequest req) {
-        // Obtenemos el userId directamente de la claim "sub" del token JWT inyectado
         String userId = jwt.getSubject();
         ProfileResponse response = service.createMyProfile(userId, req);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -42,7 +40,6 @@ public class UserProfileController {
     public ResponseEntity<ProfileResponse> updateProfile(
             @AuthenticationPrincipal Jwt jwt,
             @Valid @RequestBody UpdateProfileRequest req) {
-        // Obtenemos el userId directamente de la claim "sub" del token JWT inyectado
         String userId = jwt.getSubject();
         return ResponseEntity.ok(service.putMyProfile(userId, req));
     }
