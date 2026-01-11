@@ -113,3 +113,21 @@ curl -X PUT http://localhost:8080/api/v1/profile \
 - **Validaciones**: Se utiliza Bean Validation para asegurar la integridad de los datos (`@Email`, `@Past`, `@NotBlank`).
 - **Gestión de Errores**: Se ha implementado un `@RestControllerAdvice` para devolver respuestas de error consistentes (400, 404, 409) con detalles de los campos en caso de errores de validación.
 - **PUT (Full Replace)**: Siguiendo la semántica HTTP PUT, el endpoint de actualización reemplaza la entidad completa. Es responsabilidad del cliente enviar todos los campos que desea conservar.
+
+## Suposiciones y Tradeoffs
+
+### Suposiciones
+
+- **birthDate opcional**: Se asume que la fecha de nacimiento es un campo opcional, ya que no todos los usuarios pueden querer proporcionarla por privacidad.
+- **Email único global**: Se asume que el email debe ser único en todo el sistema, no solo por usuario.
+- **Autenticación simplificada**: El endpoint de login genera tokens sin validación de contraseña, asumiendo un entorno de desarrollo/pruebas.
+- **Un perfil por usuario**: Se asume que cada usuario autenticado solo puede tener un perfil asociado a su `userId`.
+
+### Tradeoffs
+
+- **PUT full replace vs PATCH**: Se optó por PUT con reemplazo completo en lugar de PATCH parcial por simplicidad de implementación y límite de tiempo. El cliente debe enviar todos los campos en cada actualización.
+- **H2 en memoria vs BD persistente**: Se priorizó la facilidad de setup y pruebas sobre la persistencia real de datos. En producción se recomendaría PostgreSQL o similar.
+- **Validación en capa DTO**: Las validaciones se realizan en DTOs en lugar de en la entidad para tener control granular sobre qué se valida en creación vs actualización.
+- **Mensajes i18n hardcodeados en inglés**: Por límite de tiempo, solo se incluye el archivo de mensajes en inglés, aunque la infraestructura soporta múltiples idiomas.
+- **Manejo genérico de DataIntegrityViolationException**: Se asume que cualquier violación de integridad es por email duplicado. En un sistema más robusto se analizaría el mensaje de error para dar feedback más específico.
+

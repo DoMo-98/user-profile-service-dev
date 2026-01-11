@@ -3,7 +3,6 @@ package com.example.userprofileservicedev.dto;
 import com.example.userprofileservicedev.constants.MessageKeys;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +27,6 @@ public class CreateProfileRequest {
     @NotBlank(message = "{" + MessageKeys.VALIDATION_LASTNAME_REQUIRED + "}")
     private String lastName;
 
-    @NotNull(message = "{" + MessageKeys.VALIDATION_BIRTHDATE_REQUIRED + "}")
     @Past(message = "{" + MessageKeys.VALIDATION_BIRTHDATE_PAST + "}")
     private LocalDate birthDate;
 
