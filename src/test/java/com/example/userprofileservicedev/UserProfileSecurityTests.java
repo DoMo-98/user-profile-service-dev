@@ -1,7 +1,7 @@
 package com.example.userprofileservicedev;
 
+import com.example.userprofileservicedev.dto.CreateProfileRequest;
 import com.example.userprofileservicedev.dto.LoginRequest;
-import com.example.userprofileservicedev.dto.UserProfileDTO;
 import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,8 +62,9 @@ class UserProfileSecurityTests {
         String token = objectMapper.readTree(response).get("access_token").asText();
 
         // 2. Create profile
-        UserProfileDTO dto = UserProfileDTO.builder()
-                .fullName("Test User")
+        CreateProfileRequest dto = CreateProfileRequest.builder()
+                .firstName("Test")
+                .lastName("User")
                 .email("test@example.com")
                 .birthDate(LocalDate.of(1990, 1, 1))
                 .build();
@@ -78,6 +79,7 @@ class UserProfileSecurityTests {
         mockMvc.perform(get("/api/v1/profile")
                 .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.fullName").value("Test User"));
+                .andExpect(jsonPath("$.firstName").value("Test"))
+                .andExpect(jsonPath("$.lastName").value("User"));
     }
 }

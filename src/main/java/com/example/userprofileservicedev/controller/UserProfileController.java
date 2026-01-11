@@ -1,6 +1,8 @@
 package com.example.userprofileservicedev.controller;
 
-import com.example.userprofileservicedev.dto.UserProfileDTO;
+import com.example.userprofileservicedev.dto.CreateProfileRequest;
+import com.example.userprofileservicedev.dto.ProfileResponse;
+import com.example.userprofileservicedev.dto.UpdateProfileRequest;
 import com.example.userprofileservicedev.service.UserProfileService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -19,18 +21,18 @@ public class UserProfileController {
     }
 
     @GetMapping
-    public UserProfileDTO getProfile(@AuthenticationPrincipal Jwt jwt) {
+    public ProfileResponse getProfile(@AuthenticationPrincipal Jwt jwt) {
         return service.getProfile(jwt.getSubject());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserProfileDTO createProfile(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody UserProfileDTO dto) {
-        return service.createProfile(jwt.getSubject(), dto);
+    public ProfileResponse createProfile(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody CreateProfileRequest req) {
+        return service.createProfile(jwt.getSubject(), req);
     }
 
     @PutMapping
-    public UserProfileDTO updateProfile(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody UserProfileDTO dto) {
-        return service.updateProfile(jwt.getSubject(), dto);
+    public ProfileResponse updateProfile(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody UpdateProfileRequest req) {
+        return service.updateProfile(jwt.getSubject(), req);
     }
 }

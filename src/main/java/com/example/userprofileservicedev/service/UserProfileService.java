@@ -1,9 +1,12 @@
 package com.example.userprofileservicedev.service;
 
 import com.example.userprofileservicedev.domain.UserProfile;
-import com.example.userprofileservicedev.dto.UserProfileDTO;
+import com.example.userprofileservicedev.dto.CreateProfileRequest;
+import com.example.userprofileservicedev.dto.ProfileResponse;
+import com.example.userprofileservicedev.dto.UpdateProfileRequest;
 import com.example.userprofileservicedev.exception.ResourceAlreadyExistsException;
 import com.example.userprofileservicedev.exception.ResourceNotFoundException;
+import com.example.userprofileservicedev.mapper.UserProfileMapper;
 import com.example.userprofileservicedev.repository.UserProfileRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,46 +16,33 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserProfileService {
 
     private final UserProfileRepository repository;
+    private final UserProfileMapper mapper;
 
-    public UserProfileService(UserProfileRepository repository) {
+    public UserProfileService(UserProfileRepository repository, UserProfileMapper mapper) {
         this.repository = repository;
+        this.mapper = mapper;
     }
 
-    public UserProfileDTO getProfile(String userId) {
+    public ProfileResponse getProfile(String userId) {
         UserProfile profile = repository.findByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Perfil no encontrado"));
-        return mapToDTO(profile);
+        return mapper.toResponse(profile);
     }
 
-    public UserProfileDTO createProfile(String userId, UserProfileDTO dto) {
-        if (repository.findByUserId(userId).isPresent()) {
+    public ProfileResponse createProfile(String userId, CreateProfileRequest req) {
+        if (repository.existsByUserId(userId)) {
             throw new ResourceAlreadyExistsException("El perfil ya existe para este usuario");
         }
-        UserProfile profile = UserProfile.builder()
-                .userId(userId)
-                .fullName(dto.getFullName())
-                .email(dto.getEmail())
-                .birthDate(dto.getBirthDate())
-                .build();
-        return mapToDTO(repository.save(profile));
+        UserProfile profile = mapper.fromCreate(userId, req);
+        return mapper.toResponse(repository.save(profile));
     }
 
-    public UserProfileDTO updateProfile(String userId, UserProfileDTO dto) {
+    public ProfileResponse updateProfile(String userId, UpdateProfileRequest req) {
         UserProfile profile = repository.findByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Perfil no encontrado"));
 
-        profile.setFullName(dto.getFullName());
-        profile.setEmail(dto.getEmail());
-        profile.setBirthDate(dto.getBirthDate());
+        mapper.applyPut(profile, req);
 
-        return mapToDTO(repository.save(profile));
-    }
-
-    private UserProfileDTO mapToDTO(UserProfile profile) {
-        return UserProfileDTO.builder()
-                .fullName(profile.getFullName())
-                .email(profile.getEmail())
-                .birthDate(profile.getBirthDate())
-                .build();
+        return mapper.toResponse(repository.save(profile));
     }
 }
