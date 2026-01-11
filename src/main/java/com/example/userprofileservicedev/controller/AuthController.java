@@ -1,5 +1,6 @@
 package com.example.userprofileservicedev.controller;
 
+import com.example.userprofileservicedev.constants.ApiPaths;
 import com.example.userprofileservicedev.dto.LoginRequest;
 import com.example.userprofileservicedev.dto.LoginResponse;
 import jakarta.validation.Valid;
@@ -18,7 +19,7 @@ import java.time.Duration;
 import java.time.Instant;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping(ApiPaths.AUTH)
 public class AuthController {
 
     private final JwtEncoder encoder;
@@ -33,7 +34,7 @@ public class AuthController {
         this.ttl = ttl;
     }
 
-    @PostMapping("/login")
+    @PostMapping(ApiPaths.AUTH_LOGIN)
     public LoginResponse login(@Valid @RequestBody LoginRequest request) {
         Instant now = Instant.now();
         long expiry = ttl.toSeconds();

@@ -1,5 +1,6 @@
 package com.example.userprofileservicedev.controller;
 
+import com.example.userprofileservicedev.constants.ApiPaths;
 import com.example.userprofileservicedev.dto.CreateProfileRequest;
 import com.example.userprofileservicedev.dto.ProfileResponse;
 import com.example.userprofileservicedev.dto.UpdateProfileRequest;
@@ -12,7 +13,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/profile")
+@RequestMapping(ApiPaths.PROFILE)
 public class UserProfileController {
 
     private final UserProfileService service;

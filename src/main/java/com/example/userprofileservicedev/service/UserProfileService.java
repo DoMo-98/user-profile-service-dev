@@ -1,5 +1,6 @@
 package com.example.userprofileservicedev.service;
 
+import com.example.userprofileservicedev.constants.MessageKeys;
 import com.example.userprofileservicedev.domain.UserProfile;
 import com.example.userprofileservicedev.dto.CreateProfileRequest;
 import com.example.userprofileservicedev.dto.ProfileResponse;
@@ -29,13 +30,13 @@ public class UserProfileService {
 
     public ProfileResponse getMyProfile(String userId) {
         UserProfile profile = repository.findByUserId(userId)
-                .orElseThrow(() -> new NotFoundException(getMessage("error.profile.notfound")));
+                .orElseThrow(() -> new NotFoundException(getMessage(MessageKeys.ERROR_PROFILE_NOT_FOUND)));
         return mapper.toResponse(profile);
     }
 
     public ProfileResponse createMyProfile(String userId, CreateProfileRequest req) {
         if (repository.existsByUserId(userId)) {
-            throw new ConflictException(getMessage("error.profile.conflict"));
+            throw new ConflictException(getMessage(MessageKeys.ERROR_PROFILE_CONFLICT));
         }
         UserProfile profile = mapper.fromCreate(userId, req);
         return mapper.toResponse(repository.save(profile));
@@ -43,7 +44,7 @@ public class UserProfileService {
 
     public ProfileResponse putMyProfile(String userId, UpdateProfileRequest req) {
         UserProfile profile = repository.findByUserId(userId)
-                .orElseThrow(() -> new NotFoundException(getMessage("error.profile.notfound")));
+                .orElseThrow(() -> new NotFoundException(getMessage(MessageKeys.ERROR_PROFILE_NOT_FOUND)));
 
         mapper.applyPut(profile, req);
 

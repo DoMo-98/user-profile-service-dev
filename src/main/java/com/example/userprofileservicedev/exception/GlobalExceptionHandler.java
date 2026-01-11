@@ -1,5 +1,6 @@
 package com.example.userprofileservicedev.exception;
 
+import com.example.userprofileservicedev.constants.MessageKeys;
 import com.example.userprofileservicedev.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.MessageSource;
@@ -32,7 +33,7 @@ public class GlobalExceptionHandler {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
-                .message(getMessage("validation.error"))
+                .message(getMessage(MessageKeys.VALIDATION_ERROR))
                 .path(request.getRequestURI())
                 .fieldErrors(fieldErrors)
                 .build();

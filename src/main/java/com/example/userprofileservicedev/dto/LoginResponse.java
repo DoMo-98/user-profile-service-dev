@@ -1,5 +1,6 @@
 package com.example.userprofileservicedev.dto;
 
+import com.example.userprofileservicedev.constants.ApiPaths;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +17,7 @@ public class LoginResponse {
 
     @JsonProperty("token_type")
     @Builder.Default
-    private String tokenType = "Bearer";
+    private String tokenType = ApiPaths.BEARER_TOKEN_TYPE;
 
     @JsonProperty("expires_in_seconds")
     private long expiresInSeconds;
