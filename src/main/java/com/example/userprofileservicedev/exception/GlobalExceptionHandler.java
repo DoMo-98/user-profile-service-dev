@@ -3,6 +3,7 @@ package com.example.userprofileservicedev.exception;
 import com.example.userprofileservicedev.constants.MessageKeys;
 import com.example.userprofileservicedev.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.List;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -65,6 +67,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex, HttpServletRequest request) {
         String message = messageSource.getMessage(MessageKeys.ERROR_EMAIL_CONFLICT, null, LocaleContextHolder.getLocale());
+
+        log.error("Data integrity violation occurred: {}", ex.getMessage(), ex);
+
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .status(HttpStatus.CONFLICT.value())
                 .message(message)
