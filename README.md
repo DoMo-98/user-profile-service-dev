@@ -111,7 +111,7 @@ curl -X PUT http://localhost:8080/api/v1/profile \
   - **JDBC URL**: `jdbc:h2:mem:testdb`
   - **Credenciales**: `sa` / `password`
 - **Validaciones**: Se utiliza Bean Validation para asegurar la integridad de los datos (`@Email`, `@Past`, `@NotBlank`).
-- **Gestión de Errores**: Se ha implementado un `@RestControllerAdvice` para devolver respuestas de error consistentes (400, 404, 409) con detalles de los campos en caso de errores de validación.
+- **Gestión de Errores**: Se ha implementado un `@RestControllerAdvice` para devolver respuestas de error consistentes (400, 401, 404, 409) con detalles de los campos en caso de errores de validación.
 - **PUT (Full Replace)**: Siguiendo la semántica HTTP PUT, el endpoint de actualización reemplaza la entidad completa. Es responsabilidad del cliente enviar todos los campos que desea conservar.
 
 ## Suposiciones y Tradeoffs

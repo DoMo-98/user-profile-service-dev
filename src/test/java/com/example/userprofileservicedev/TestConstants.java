@@ -35,6 +35,7 @@ public final class TestConstants {
     public static final String ACCESS_TOKEN_FIELD = "access_token";
 
     // ===================== HTTP Status Codes =====================
+    public static final int HTTP_STATUS_UNAUTHORIZED = 401;
     public static final int HTTP_STATUS_BAD_REQUEST = 400;
     public static final int HTTP_STATUS_NOT_FOUND = 404;
     public static final int HTTP_STATUS_CONFLICT = 409;
@@ -44,6 +45,7 @@ public final class TestConstants {
     public static final int TOKEN_EXPIRES_IN_SECONDS = 1800;
 
     // ===================== Error Messages =====================
+    public static final String MSG_UNAUTHORIZED = "Authentication is required to access this resource";
     public static final String MSG_PROFILE_NOT_FOUND = "Profile not found";
     public static final String MSG_PROFILE_CONFLICT = "Profile already exists for this user";
     public static final String MSG_VALIDATION_ERROR = "Validation error";

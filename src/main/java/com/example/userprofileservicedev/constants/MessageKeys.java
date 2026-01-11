@@ -23,6 +23,7 @@ public final class MessageKeys {
     public static final String ERROR_PROFILE_NOT_FOUND = "error.profile.notfound";
     public static final String ERROR_PROFILE_CONFLICT = "error.profile.conflict";
     public static final String ERROR_EMAIL_CONFLICT = "error.email.conflict";
+    public static final String ERROR_UNAUTHORIZED = "error.unauthorized";
 }
 
 

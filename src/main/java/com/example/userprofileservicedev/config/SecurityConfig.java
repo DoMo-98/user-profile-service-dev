@@ -31,9 +31,12 @@ import java.nio.charset.StandardCharsets;
 public class SecurityConfig {
 
     private final String jwtSecret;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
-    public SecurityConfig(@Value("${app.jwt.secret}") String jwtSecret) {
+    public SecurityConfig(@Value("${app.jwt.secret}") String jwtSecret,
+                          CustomAuthenticationEntryPoint authenticationEntryPoint) {
         this.jwtSecret = jwtSecret;
+        this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
     @Bean
@@ -46,7 +49,9 @@ public class SecurityConfig {
                 .anyRequest().denyAll()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+            .oauth2ResourceServer(oauth2 -> oauth2
+                .jwt(Customizer.withDefaults())
+                .authenticationEntryPoint(authenticationEntryPoint))
             .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
 
         return http.build();

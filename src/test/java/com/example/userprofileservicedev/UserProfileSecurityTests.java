@@ -44,7 +44,10 @@ class UserProfileSecurityTests {
     @Test
     void whenGetProfileWithoutToken_thenUnauthorized() throws Exception {
         mockMvc.perform(get(API_V1_PROFILE))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath(JSON_PATH_STATUS).value(HTTP_STATUS_UNAUTHORIZED))
+                .andExpect(jsonPath(JSON_PATH_MESSAGE).value(MSG_UNAUTHORIZED))
+                .andExpect(jsonPath(JSON_PATH_PATH).value(API_V1_PROFILE));
     }
 
     @Test
