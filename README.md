@@ -145,6 +145,98 @@ curl -X PUT http://localhost:8080/api/v1/profile \
 
 ---
 
+## Field Formats and Validations
+
+All profile endpoints validate input data to ensure data integrity and security. Below are the expected formats and validation rules for each field:
+
+### Required Fields
+
+#### `firstName` (String)
+- **Required**: Yes
+- **Format**: Only letters, spaces, hyphens (-), and apostrophes (')
+- **Valid examples**: `"John"`, `"Mary-Jane"`, `"O'Connor"`, `"José García"`
+- **Invalid examples**: `"John123"`, `"User@mail"`, `"Test_User"`
+- **Error message**: "First name must contain only letters, spaces, hyphens, and apostrophes"
+
+#### `lastName` (String)
+- **Required**: Yes
+- **Format**: Only letters, spaces, hyphens (-), and apostrophes (')
+- **Valid examples**: `"Smith"`, `"O'Brien"`, `"García-López"`, `"De la Cruz"`
+- **Invalid examples**: `"Smith99"`, `"Name@123"`, `"User_Test"`
+- **Error message**: "Last name must contain only letters, spaces, hyphens, and apostrophes"
+
+#### `email` (String)
+- **Required**: Yes
+- **Format**: Valid email format
+- **Unique**: Must be unique across all profiles
+- **Valid examples**: `"user@example.com"`, `"john.doe@company.co.uk"`
+- **Invalid examples**: `"invalid-email"`, `"user@"`, `"@example.com"`
+- **Error message**: "Email format is invalid"
+
+#### `birthDate` (LocalDate)
+- **Required**: Yes
+- **Format**: ISO 8601 date format (YYYY-MM-DD)
+- **Constraint**: Must be a past date (not today or future)
+- **Valid examples**: `"1990-01-15"`, `"2000-12-25"`
+- **Invalid examples**: `"2026-01-12"` (today/future), `"15-01-1990"` (wrong format)
+- **Error message**: "Birth date must be in the past"
+
+### Optional Fields
+
+#### `phoneNumber` (String)
+- **Required**: No
+- **Format**: Only digits, spaces, hyphens (-), parentheses (), and plus sign (+)
+- **Valid examples**: `"+1 (555) 123-4567"`, `"555-1234"`, `"+34 612 345 678"`
+- **Invalid examples**: `"ABC-DEFG"`, `"555-CALL"`, `"phone#123"`
+- **Error message**: "Phone number must contain only digits, spaces, hyphens, parentheses, and plus sign"
+
+#### `postalCode` (String)
+- **Required**: No
+- **Format**: Alphanumeric characters, spaces, and hyphens (-)
+- **Valid examples**: `"12345"`, `"12345-6789"`, `"SW1A 1AA"`, `"28001"`
+- **Invalid examples**: `"!!!###"`, `"12@34"`, `"AB#CD"`
+- **Error message**: "Postal code must be alphanumeric and may contain spaces or hyphens"
+
+#### `street` (String)
+- **Required**: No
+- **Format**: Any string
+- **Validation**: None
+
+#### `city` (String)
+- **Required**: No
+- **Format**: Any string
+- **Validation**: None
+
+#### `country` (String)
+- **Required**: No
+- **Format**: Any string
+- **Validation**: None
+
+### Validation Error Response
+
+When validation fails, the API returns a `400 Bad Request` with detailed field errors:
+
+```json
+{
+  "timestamp": "2026-01-12T10:21:33",
+  "status": 400,
+  "message": "Validation error",
+  "path": "/api/v1/profile",
+  "fieldErrors": [
+    {
+      "field": "firstName",
+      "message": "First name must contain only letters, spaces, hyphens, and apostrophes"
+    },
+    {
+      "field": "phoneNumber",
+      "message": "Phone number must contain only digits, spaces, hyphens, parentheses, and plus sign"
+    }
+  ]
+}
+```
+
+---
+
 ## Design Notes and Decisions
 
 - **User Identification**: The `userId` is never sent in the body or URL; it is extracted exclusively from the `sub` claim of the JWT.
@@ -152,7 +244,7 @@ curl -X PUT http://localhost:8080/api/v1/profile \
   - **H2 Console**: `http://localhost:8080/h2-console`
   - **JDBC URL**: `jdbc:h2:mem:testdb`
   - **Credentials**: `sa` / `password`
-- **Validations**: Bean Validation is used to ensure data integrity (`@Email`, `@Past`, `@NotBlank`).
+- **Validations**: Bean Validation with custom validators is used to ensure data integrity and security. See the [Field Formats and Validations](#field-formats-and-validations) section for detailed format requirements.
 - **Error Handling**: A `@RestControllerAdvice` has been implemented to return consistent error responses (400, 401, 404, 409) with field details in case of validation errors.
 - **PUT (Full Replace)**: Following HTTP PUT semantics, the update endpoint replaces the entire entity. It is the client's responsibility to send all fields it wishes to preserve.
 

@@ -71,6 +71,112 @@ class UserProfileValidationTests {
                 .andExpect(jsonPath(JSON_PATH_FIELD_ERRORS).isArray());
     }
 
+    @Test
+    void whenCreateWithNumericFirstName_thenBadRequest() throws Exception {
+        String token = obtainToken();
+
+        CreateProfileRequest req = CreateProfileRequest.builder()
+                .firstName(FIRST_NAME_INVALID_NUMERIC)
+                .lastName(LAST_NAME_USER)
+                .email(EMAIL_JOHN123)
+                .birthDate(BIRTH_DATE_1990)
+                .build();
+
+        mockMvc.perform(post(API_V1_PROFILE)
+                .header(AUTHORIZATION_HEADER, BEARER_PREFIX + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath(JSON_PATH_STATUS).value(HTTP_STATUS_BAD_REQUEST))
+                .andExpect(jsonPath(JSON_PATH_MESSAGE).value(MSG_VALIDATION_ERROR))
+                .andExpect(jsonPath(JSON_PATH_FIELD_ERRORS).isArray());
+    }
+
+    @Test
+    void whenCreateWithNumericLastName_thenBadRequest() throws Exception {
+        String token = obtainToken();
+
+        CreateProfileRequest req = CreateProfileRequest.builder()
+                .firstName(FIRST_NAME_TEST)
+                .lastName(LAST_NAME_INVALID_NUMERIC)
+                .email(EMAIL_SMITH99)
+                .birthDate(BIRTH_DATE_1990)
+                .build();
+
+        mockMvc.perform(post(API_V1_PROFILE)
+                .header(AUTHORIZATION_HEADER, BEARER_PREFIX + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath(JSON_PATH_STATUS).value(HTTP_STATUS_BAD_REQUEST))
+                .andExpect(jsonPath(JSON_PATH_MESSAGE).value(MSG_VALIDATION_ERROR))
+                .andExpect(jsonPath(JSON_PATH_FIELD_ERRORS).isArray());
+    }
+
+    @Test
+    void whenCreateWithAlphabeticPhoneNumber_thenBadRequest() throws Exception {
+        String token = obtainToken();
+
+        CreateProfileRequest req = CreateProfileRequest.builder()
+                .firstName(FIRST_NAME_TEST)
+                .lastName(LAST_NAME_USER)
+                .email(EMAIL_PHONE_TEST)
+                .birthDate(BIRTH_DATE_1990)
+                .phoneNumber(PHONE_NUMBER_INVALID)
+                .build();
+
+        mockMvc.perform(post(API_V1_PROFILE)
+                .header(AUTHORIZATION_HEADER, BEARER_PREFIX + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath(JSON_PATH_STATUS).value(HTTP_STATUS_BAD_REQUEST))
+                .andExpect(jsonPath(JSON_PATH_MESSAGE).value(MSG_VALIDATION_ERROR))
+                .andExpect(jsonPath(JSON_PATH_FIELD_ERRORS).isArray());
+    }
+
+    @Test
+    void whenCreateWithInvalidPostalCode_thenBadRequest() throws Exception {
+        String token = obtainToken();
+
+        CreateProfileRequest req = CreateProfileRequest.builder()
+                .firstName(FIRST_NAME_TEST)
+                .lastName(LAST_NAME_USER)
+                .email(EMAIL_POSTAL_TEST)
+                .birthDate(BIRTH_DATE_1990)
+                .postalCode(POSTAL_CODE_INVALID)
+                .build();
+
+        mockMvc.perform(post(API_V1_PROFILE)
+                .header(AUTHORIZATION_HEADER, BEARER_PREFIX + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath(JSON_PATH_STATUS).value(HTTP_STATUS_BAD_REQUEST))
+                .andExpect(jsonPath(JSON_PATH_MESSAGE).value(MSG_VALIDATION_ERROR))
+                .andExpect(jsonPath(JSON_PATH_FIELD_ERRORS).isArray());
+    }
+
+    @Test
+    void whenCreateWithValidNames_thenSuccess() throws Exception {
+        String token = obtainToken();
+
+        CreateProfileRequest req = CreateProfileRequest.builder()
+                .firstName(FIRST_NAME_VALID_HYPHEN)
+                .lastName(LAST_NAME_VALID_APOSTROPHE)
+                .email(EMAIL_VALID_NAMES)
+                .birthDate(BIRTH_DATE_1990)
+                .phoneNumber(PHONE_NUMBER_VALID)
+                .postalCode(POSTAL_CODE_VALID)
+                .build();
+
+        mockMvc.perform(post(API_V1_PROFILE)
+                .header(AUTHORIZATION_HEADER, BEARER_PREFIX + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isCreated());
+    }
+
     private String obtainToken() throws Exception {
         LoginRequest loginRequest = LoginRequest.builder()
                 .username(USERNAME_VALIDATOR)

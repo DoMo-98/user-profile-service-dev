@@ -95,6 +95,25 @@ public final class TestConstants {
 
     // ===================== Test Phone Numbers =====================
     public static final String PHONE_NUMBER_DEFAULT = "123456789";
+    public static final String PHONE_NUMBER_VALID = "+1 (555) 123-4567";
+    public static final String PHONE_NUMBER_INVALID = "ABC-DEFG";
+
+    // ===================== Test Postal Codes =====================
+    public static final String POSTAL_CODE_VALID = "12345";
+    public static final String POSTAL_CODE_INVALID = "!!!###";
+
+    // ===================== Test Names with Special Characters =====================
+    public static final String FIRST_NAME_INVALID_NUMERIC = "John123";
+    public static final String FIRST_NAME_VALID_HYPHEN = "Mary-Jane";
+    public static final String LAST_NAME_INVALID_NUMERIC = "Smith99";
+    public static final String LAST_NAME_VALID_APOSTROPHE = "O'Connor";
+
+    // ===================== Test Emails for Validation Tests =====================
+    public static final String EMAIL_JOHN123 = "john123@test.com";
+    public static final String EMAIL_SMITH99 = "smith99@test.com";
+    public static final String EMAIL_PHONE_TEST = "phonetest@test.com";
+    public static final String EMAIL_POSTAL_TEST = "postal@test.com";
+    public static final String EMAIL_VALID_NAMES = "validnames@test.com";
 
     // ===================== Test Birth Dates =====================
     public static final LocalDate BIRTH_DATE_1990 = LocalDate.of(1990, 1, 1);
