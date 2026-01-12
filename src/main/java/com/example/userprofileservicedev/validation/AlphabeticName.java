@@ -1,5 +1,6 @@
 package com.example.userprofileservicedev.validation;
 
+import com.example.userprofileservicedev.constants.MessageKeys;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -15,7 +16,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface AlphabeticName {
 
-    String message() default "Must contain only letters, spaces, hyphens, and apostrophes";
+    String message() default "{" + MessageKeys.VALIDATION_FIRSTNAME_INVALID + "}";
 
     Class<?>[] groups() default {};
 

@@ -1,5 +1,6 @@
 package com.example.userprofileservicedev.validation;
 
+import com.example.userprofileservicedev.constants.MessageKeys;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -15,7 +16,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface ValidPhoneNumber {
 
-    String message() default "Must contain only digits, spaces, hyphens, parentheses, and plus sign";
+    String message() default "{" + MessageKeys.VALIDATION_PHONENUMBER_INVALID + "}";
 
     Class<?>[] groups() default {};
 
