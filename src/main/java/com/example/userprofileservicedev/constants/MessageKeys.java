@@ -29,6 +29,8 @@ public final class MessageKeys {
     public static final String ERROR_PROFILE_CONFLICT = "error.profile.conflict";
     public static final String ERROR_EMAIL_CONFLICT = "error.email.conflict";
     public static final String ERROR_UNAUTHORIZED = "error.unauthorized";
+    public static final String ERROR_INVALID_DATE_FORMAT = "error.invalid.date.format";
+    public static final String ERROR_INVALID_REQUEST_BODY = "error.invalid.request.body";
 }
 
 

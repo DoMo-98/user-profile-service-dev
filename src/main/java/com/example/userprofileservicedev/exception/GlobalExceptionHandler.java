@@ -9,10 +9,12 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Slf4j
@@ -76,6 +78,27 @@ public class GlobalExceptionHandler {
                 .path(request.getRequestURI())
                 .build();
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpServletRequest request) {
+        String message;
+        Throwable cause = ex.getCause();
+
+        if (cause != null && cause.getCause() instanceof DateTimeParseException) {
+            message = messageSource.getMessage(MessageKeys.ERROR_INVALID_DATE_FORMAT, null, LocaleContextHolder.getLocale());
+        } else {
+            message = messageSource.getMessage(MessageKeys.ERROR_INVALID_REQUEST_BODY, null, LocaleContextHolder.getLocale());
+        }
+
+        log.error("HTTP message not readable: {}", ex.getMessage());
+
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message(message)
+                .path(request.getRequestURI())
+                .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     private String getMessage() {
