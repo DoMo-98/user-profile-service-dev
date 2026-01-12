@@ -20,12 +20,10 @@ public class PhoneNumberValidator implements ConstraintValidator<ValidPhoneNumbe
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        // Null or empty values are considered valid (use @NotBlank/@NotNull for required fields)
         if (value == null || value.trim().isEmpty()) {
             return true;
         }
 
-        // Check if the value matches the pattern
         return value.matches(PHONE_PATTERN);
     }
 }

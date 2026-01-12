@@ -19,12 +19,10 @@ public class AlphabeticNameValidator implements ConstraintValidator<AlphabeticNa
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        // Null values are considered valid (use @NotBlank/@NotNull for required fields)
         if (value == null || value.trim().isEmpty()) {
             return true;
         }
 
-        // Check if the value matches the pattern
         return value.matches(NAME_PATTERN);
     }
 }

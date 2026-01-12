@@ -20,12 +20,10 @@ public class PostalCodeValidator implements ConstraintValidator<ValidPostalCode,
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        // Null or empty values are considered valid (use @NotBlank/@NotNull for required fields)
         if (value == null || value.trim().isEmpty()) {
             return true;
         }
 
-        // Check if the value matches the pattern
         return value.matches(POSTAL_CODE_PATTERN);
     }
 }
