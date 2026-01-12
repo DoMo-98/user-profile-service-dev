@@ -11,7 +11,7 @@ public class PhoneNumberValidator implements ConstraintValidator<ValidPhoneNumbe
 
     // Pattern allows: digits, spaces, hyphens, parentheses, and plus sign
     // Examples: +1 (555) 123-4567, +34 612 345 678, 555-1234
-    private static final String PHONE_PATTERN = "^[\\d\\s\\-()\\+]+$";
+    private static final String PHONE_PATTERN = "^[\\d\\s\\-()+ ]+$";
 
     @Override
     public void initialize(ValidPhoneNumber constraintAnnotation) {
