@@ -95,11 +95,9 @@ public final class TestConstants {
 
     // ===================== Test Phone Numbers =====================
     public static final String PHONE_NUMBER_DEFAULT = "123456789";
-    public static final String PHONE_NUMBER_VALID = "+1 (555) 123-4567";
     public static final String PHONE_NUMBER_INVALID = "ABC-DEFG";
 
     // ===================== Test Postal Codes =====================
-    public static final String POSTAL_CODE_VALID = "12345";
     public static final String POSTAL_CODE_INVALID = "!!!###";
 
 
