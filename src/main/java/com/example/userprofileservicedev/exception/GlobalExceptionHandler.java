@@ -14,6 +14,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class GlobalExceptionHandler {
                 .toList();
 
         ErrorResponse errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .message(getMessage())
                 .path(request.getRequestURI())
@@ -49,6 +51,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(NotFoundException ex, HttpServletRequest request) {
         ErrorResponse errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.NOT_FOUND.value())
                 .message(ex.getMessage())
                 .path(request.getRequestURI())
@@ -59,6 +62,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<ErrorResponse> handleConflict(ConflictException ex, HttpServletRequest request) {
         ErrorResponse errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.CONFLICT.value())
                 .message(ex.getMessage())
                 .path(request.getRequestURI())
@@ -73,6 +77,7 @@ public class GlobalExceptionHandler {
         log.error("Data integrity violation occurred: {}", ex.getMessage(), ex);
 
         ErrorResponse errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.CONFLICT.value())
                 .message(message)
                 .path(request.getRequestURI())
@@ -94,6 +99,7 @@ public class GlobalExceptionHandler {
         log.error("HTTP message not readable: {}", ex.getMessage());
 
         ErrorResponse errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .message(message)
                 .path(request.getRequestURI())

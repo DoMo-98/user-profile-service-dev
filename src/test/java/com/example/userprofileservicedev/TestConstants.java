@@ -24,6 +24,7 @@ public final class TestConstants {
     public static final String JSON_PATH_STATUS = "$.status";
     public static final String JSON_PATH_MESSAGE = "$.message";
     public static final String JSON_PATH_PATH = "$.path";
+    public static final String JSON_PATH_TIMESTAMP = "$.timestamp";
     public static final String JSON_PATH_FIELD_ERRORS = "$.fieldErrors";
     public static final String JSON_PATH_ACCESS_TOKEN = "$.access_token";
     public static final String JSON_PATH_TOKEN_TYPE = "$.token_type";

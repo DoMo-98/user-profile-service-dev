@@ -43,6 +43,7 @@ class UserProfileValidationTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath(JSON_PATH_TIMESTAMP).exists())
                 .andExpect(jsonPath(JSON_PATH_STATUS).value(HTTP_STATUS_BAD_REQUEST))
                 .andExpect(jsonPath(JSON_PATH_MESSAGE).value(MSG_VALIDATION_ERROR))
                 .andExpect(jsonPath(JSON_PATH_PATH).value(API_V1_PROFILE))
@@ -65,6 +66,7 @@ class UserProfileValidationTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath(JSON_PATH_TIMESTAMP).exists())
                 .andExpect(jsonPath(JSON_PATH_STATUS).value(HTTP_STATUS_BAD_REQUEST))
                 .andExpect(jsonPath(JSON_PATH_MESSAGE).value(MSG_VALIDATION_ERROR))
                 .andExpect(jsonPath(JSON_PATH_PATH).value(API_V1_PROFILE))
@@ -89,6 +91,7 @@ class UserProfileValidationTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath(JSON_PATH_TIMESTAMP).exists())
                 .andExpect(jsonPath(JSON_PATH_STATUS).value(HTTP_STATUS_BAD_REQUEST))
                 .andExpect(jsonPath(JSON_PATH_MESSAGE).value(MSG_VALIDATION_ERROR))
                 .andExpect(jsonPath(JSON_PATH_FIELD_ERRORS).isArray());
@@ -111,6 +114,7 @@ class UserProfileValidationTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath(JSON_PATH_TIMESTAMP).exists())
                 .andExpect(jsonPath(JSON_PATH_STATUS).value(HTTP_STATUS_BAD_REQUEST))
                 .andExpect(jsonPath(JSON_PATH_MESSAGE).value(MSG_VALIDATION_ERROR))
                 .andExpect(jsonPath(JSON_PATH_FIELD_ERRORS).isArray());

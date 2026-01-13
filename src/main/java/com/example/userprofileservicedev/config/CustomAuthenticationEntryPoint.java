@@ -39,6 +39,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         );
 
         ErrorResponse errorResponse = ErrorResponse.builder()
+                .timestamp(java.time.LocalDateTime.now())
                 .status(HttpStatus.UNAUTHORIZED.value())
                 .message(message)
                 .path(request.getRequestURI())
