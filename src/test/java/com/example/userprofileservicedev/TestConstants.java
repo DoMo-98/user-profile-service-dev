@@ -94,7 +94,7 @@ public final class TestConstants {
     public static final String EMAIL_INVALID = "invalid-email";
 
     // ===================== Test Phone Numbers =====================
-    public static final String PHONE_NUMBER_DEFAULT = "123456789";
+    public static final String PHONE_NUMBER_DEFAULT = "+1 201 555 0123";
     public static final String PHONE_NUMBER_INVALID = "ABC-DEFG";
 
     // ===================== Test Postal Codes =====================

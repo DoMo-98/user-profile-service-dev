@@ -185,9 +185,9 @@ All profile endpoints validate input data to ensure data integrity and security.
 
 #### `phoneNumber` (String)
 - **Required**: No
-- **Format**: Only digits, spaces, hyphens (-), parentheses (), and plus sign (+)
-- **Valid examples**: `"+1 (555) 123-4567"`, `"555-1234"`, `"+34 612 345 678"`
-- **Invalid examples**: `"ABC-DEFG"`, `"555-CALL"`, `"phone#123"`
+- **Format**: International format with country code (E.164 format recommended). Uses Google's libphonenumber for validation.
+- **Valid examples**: `"+1 555 123 4567"`, `"+34 612 345 678"`, `"+44 20 7946 0958"`, `"+52 55 1234 5678"`
+- **Invalid examples**: `"555-1234"` (missing country code), `"ABC-DEFG"`, `"phone#123"`
 - **Error message**: "Phone number must contain only digits, spaces, hyphens, parentheses, and plus sign"
 
 #### `postalCode` (String)

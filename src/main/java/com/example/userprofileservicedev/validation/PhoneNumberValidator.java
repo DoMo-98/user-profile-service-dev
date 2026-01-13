@@ -1,17 +1,18 @@
 package com.example.userprofileservicedev.validation;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 /**
  * Validator for ValidPhoneNumber annotation.
- * Allows digits, spaces, hyphens, parentheses, and plus sign.
+ * Uses Google's libphonenumber library for comprehensive phone number validation.
  */
 public class PhoneNumberValidator implements ConstraintValidator<ValidPhoneNumber, String> {
 
-    // Pattern allows: digits, spaces, hyphens, parentheses, and plus sign
-    // Examples: +1 (555) 123-4567, +34 612 345 678, 555-1234
-    private static final String PHONE_PATTERN = "^[\\d\\s\\-()+ ]+$";
+    private final PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
 
     @Override
     public void initialize(ValidPhoneNumber constraintAnnotation) {
@@ -24,7 +25,15 @@ public class PhoneNumberValidator implements ConstraintValidator<ValidPhoneNumbe
             return true;
         }
 
-        return value.matches(PHONE_PATTERN);
+        try {
+            // Parse the phone number. Region code "ZZ" means international format
+            Phonenumber.PhoneNumber phoneNumber = phoneNumberUtil.parse(value, "ZZ");
+
+            // Validate if the number is valid for its region
+            return phoneNumberUtil.isValidNumber(phoneNumber);
+        } catch (NumberParseException e) {
+            return false;
+        }
     }
 }
 
