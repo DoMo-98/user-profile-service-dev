@@ -173,15 +173,15 @@ All profile endpoints validate input data to ensure data integrity and security.
 - **Invalid examples**: `"invalid-email"`, `"user@"`, `"@example.com"`
 - **Error message**: "Email format is invalid"
 
+### Optional Fields
+
 #### `birthDate` (LocalDate)
-- **Required**: Yes
+- **Required**: No
 - **Format**: ISO 8601 date format (YYYY-MM-DD)
 - **Constraint**: Must be a past date (not today or future)
 - **Valid examples**: `"1990-01-15"`, `"2000-12-25"`
 - **Invalid examples**: `"2026-01-12"` (today/future), `"15-01-1990"` (wrong format)
 - **Error message**: "Birth date must be in the past"
-
-### Optional Fields
 
 #### `phoneNumber` (String)
 - **Required**: No
