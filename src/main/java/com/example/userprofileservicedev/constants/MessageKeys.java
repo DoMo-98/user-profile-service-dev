@@ -14,11 +14,8 @@ public final class MessageKeys {
     public static final String VALIDATION_EMAIL_REQUIRED = "validation.email.required";
     public static final String VALIDATION_EMAIL_INVALID = "validation.email.invalid";
     public static final String VALIDATION_FIRSTNAME_REQUIRED = "validation.firstName.required";
-    public static final String VALIDATION_FIRSTNAME_INVALID = "validation.firstName.invalid";
     public static final String VALIDATION_LASTNAME_REQUIRED = "validation.lastName.required";
-    public static final String VALIDATION_LASTNAME_INVALID = "validation.lastName.invalid";
     public static final String VALIDATION_BIRTHDATE_PAST = "validation.birthDate.past";
-    public static final String VALIDATION_BIRTHDATE_REQUIRED = "validation.birthDate.required";
     public static final String VALIDATION_PHONENUMBER_INVALID = "validation.phoneNumber.invalid";
     public static final String VALIDATION_POSTALCODE_INVALID = "validation.postalCode.invalid";
     public static final String VALIDATION_USERNAME_REQUIRED = "validation.username.required";
