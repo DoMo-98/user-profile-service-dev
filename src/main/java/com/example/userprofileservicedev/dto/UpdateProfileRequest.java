@@ -32,13 +32,13 @@ public class UpdateProfileRequest {
     @Past(message = "{" + MessageKeys.VALIDATION_BIRTHDATE_PAST + "}")
     private LocalDate birthDate;
 
-    @ValidPhoneNumber(message = "{" + MessageKeys.VALIDATION_PHONENUMBER_INVALID + "}")
+    @ValidPhoneNumber
     private String phoneNumber;
 
     private String street;
     private String city;
     private String country;
 
-    @ValidPostalCode(message = "{" + MessageKeys.VALIDATION_POSTALCODE_INVALID + "}")
+    @ValidPostalCode
     private String postalCode;
 }

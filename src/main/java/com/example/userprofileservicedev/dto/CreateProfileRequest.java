@@ -29,7 +29,7 @@ public class CreateProfileRequest {
     @NotBlank(message = "{" + MessageKeys.VALIDATION_LASTNAME_REQUIRED + "}")
     private String lastName;
 
-    @ValidPhoneNumber(message = "{" + MessageKeys.VALIDATION_PHONENUMBER_INVALID + "}")
+    @ValidPhoneNumber
     private String phoneNumber;
 
     @Past(message = "{" + MessageKeys.VALIDATION_BIRTHDATE_PAST + "}")
@@ -39,6 +39,6 @@ public class CreateProfileRequest {
     private String city;
     private String country;
 
-    @ValidPostalCode(message = "{" + MessageKeys.VALIDATION_POSTALCODE_INVALID + "}")
+    @ValidPostalCode
     private String postalCode;
 }
