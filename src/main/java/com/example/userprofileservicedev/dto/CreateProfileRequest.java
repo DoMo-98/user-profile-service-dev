@@ -29,11 +29,11 @@ public class CreateProfileRequest {
     @NotBlank(message = "{" + MessageKeys.VALIDATION_LASTNAME_REQUIRED + "}")
     private String lastName;
 
-    @ValidPhoneNumber
-    private String phoneNumber;
-
     @Past(message = "{" + MessageKeys.VALIDATION_BIRTHDATE_PAST + "}")
     private LocalDate birthDate;
+
+    @ValidPhoneNumber
+    private String phoneNumber;
 
     private String street;
     private String city;
